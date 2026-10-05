@@ -34,10 +34,17 @@ ram.runtime = "350M"
     [install.domain]
     type = "domain"
 
-    [install.admin]
-    help.en = "Choose the user who can access to silverbullet"
-    help.fr = "Choisissez l'utilisateur pouvant accéder à silverbullet"
-    type = "user"
+    [install.init_main_permission]
+    help.en = "Who can reach SilverBullet? (SilverBullet always asks for its own login)"
+    help.fr = "Qui peut accéder à SilverBullet ? (SilverBullet demande toujours sa propre connexion)"
+    type = "group"
+    default = "admins"
+
+    [install.init_api_permission]
+    help.en = "Who can reach the SilverBullet HTTP API (/.fs)? Bearer tokens are still required."
+    help.fr = "Qui peut joindre l'API HTTP SilverBullet (/.fs) ? Un token Bearer reste requis."
+    type = "group"
+    default = "visitors"
 
     [install.enable_mcp]
     ask.en = "Enable the MCP sidecar (expose notes to LLMs via /mcp)?"
@@ -54,6 +61,18 @@ ram.runtime = "350M"
     help.fr = "Qui peut joindre le point d'accès MCP (/mcp) ? Un token client reste requis."
     type = "group"
     default = "admins"
+
+    [install.admin]
+    help.en = "Choose the user who will own the SilverBullet space"
+    help.fr = "Choisissez l'utilisateur propriétaire de l'espace SilverBullet"
+    type = "user"
+
+    [install.admin_pw]
+    ask.en = "Choose a password for this SilverBullet admin user"
+    ask.fr = "Choisissez un mot de passe pour cet utilisateur administrateur SilverBullet"
+    help.en = "This password is only used to create the SilverBullet account. It is stored as a hash in the app data folder and is not the YunoHost account password."
+    help.fr = "Ce mot de passe sert uniquement à créer le compte SilverBullet. Il est stocké sous forme de hash dans les données de l'application et n'est pas le mot de passe du compte YunoHost."
+    type = "password"
 
 [resources]
 
@@ -89,7 +108,11 @@ ram.runtime = "350M"
 
     [resources.permissions]
     main.url = "/"
-    main.allowed = "admins"
+    main.auth_header = false
+    api.url = "/.fs"
+    api.auth_header = false
+    api.show_tile = false
+    api.allowed = "visitors"
     mcp.url = "/mcp"
     mcp.auth_header = false
     mcp.show_tile = false
